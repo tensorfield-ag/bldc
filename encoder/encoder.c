@@ -84,6 +84,7 @@ bool encoder_init(volatile mc_configuration *conf) {
 		res = true;
 	} break;
 
+	case SENSOR_PORT_MODE_HALL:
 	case SENSOR_PORT_MODE_AS5047_SPI: {
 		SENSOR_PORT_3V3();
 
@@ -475,6 +476,7 @@ void encoder_check_faults(volatile mc_configuration *m_conf, bool is_second_moto
 
 	if (is_foc_encoder) {
 		switch (m_conf->m_sensor_port_mode) {
+		case SENSOR_PORT_MODE_HALL:
 		case SENSOR_PORT_MODE_AS5047_SPI:
 			if (encoder_cfg_as504x.state.spi_error_rate > 0.05) {
 				mc_interface_fault_stop(FAULT_CODE_ENCODER_SPI, is_second_motor, false);
@@ -589,6 +591,7 @@ static void terminal_encoder(int argc, const char **argv) {
 	const volatile mc_configuration *mcconf = mc_interface_get_configuration();
 
 	switch (mcconf->m_sensor_port_mode) {
+	case SENSOR_PORT_MODE_HALL:
 	case SENSOR_PORT_MODE_AS5047_SPI:
 		commands_printf("SPI encoder value: %d, errors: %d, error rate: %.3f %%",
 				encoder_cfg_as504x.state.spi_val, 
