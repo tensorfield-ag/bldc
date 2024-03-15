@@ -1,6 +1,14 @@
 #ifndef HW_60_MK6_MAX_JETTY_H_
 #define HW_60_MK6_MAX_JETTY_H_
 
+// Application
+#ifndef APPCONF_APP_TO_USE
+#define APPCONF_APP_TO_USE				APP_CUSTOM
+#endif
+#ifndef APP_CUSTOM_TO_USE
+#define APP_CUSTOM_TO_USE				"app_jetty.c"
+#endif
+
 // Limits
 #ifndef MCCONF_L_CURRENT_MAX
 #define MCCONF_L_CURRENT_MAX			120.0 // Current limit in Amperes (Upper)
