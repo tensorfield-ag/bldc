@@ -73,9 +73,6 @@ static THD_FUNCTION(can_send_encoder_thread, arg) {
 			return;
 		}
 
-		// Reset timeout if everything is OK.
-		timeout_reset();
-
 		const app_configuration *conf = app_get_configuration();
 
 		if (conf->can_mode == CAN_MODE_VESC) {
