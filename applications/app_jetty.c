@@ -20,10 +20,15 @@
 #include "app.h"
 #include "buffer.h"
 #include "comm_can.h"
+#include "encoder.h"
 #include "mc_interface.h"
 #include "timeout.h"
 #include <string.h>
 #include <stdio.h>
+
+#define POSITION_FIXED_SCALE	50.0
+#define ENCODER_ERROR_THRESHOLD	0.001
+#define ENCODER_ERROR_BIT_POS	15
 
 // Threads
 static THD_FUNCTION(can_send_encoder_thread, arg);
@@ -32,7 +37,6 @@ static THD_WORKING_AREA(can_send_encoder_wa, 1024);
 // Private variables
 static volatile bool stop_now = true;
 static volatile bool is_running = false;
-
 
 // Private functions
 void app_custom_start(void) {
@@ -76,9 +80,15 @@ static THD_FUNCTION(can_send_encoder_thread, arg) {
 		const app_configuration *conf = app_get_configuration();
 
 		if (conf->can_mode == CAN_MODE_VESC) {
-			const float position = mc_interface_get_pid_pos_now();
-			const int16_t position_fixed = position * 50.0;
-			can_send_encoder(conf->controller_id, position_fixed);
+			} else {
+				const float position = mc_interface_get_pid_pos_now();
+				const int16_t position_fixed = position * POSITION_FIXED_SCALE;
+				const float error_rate = encoder_get_error_rate();
+				const int is_error = (error_rate > ENCODER_ERROR_THRESHOLD);
+				const int16_t error_bit = is_error << ENCODER_ERROR_BIT_POS;
+
+				can_send_encoder(
+					conf->controller_id, error_bit | position_fixed);
 		}
 
 		chThdSleepMilliseconds(1);
