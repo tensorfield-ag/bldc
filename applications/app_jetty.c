@@ -80,15 +80,14 @@ static THD_FUNCTION(can_send_encoder_thread, arg) {
 		const app_configuration *conf = app_get_configuration();
 
 		if (conf->can_mode == CAN_MODE_VESC) {
-			} else {
-				const float position = mc_interface_get_pid_pos_now();
-				const int16_t position_fixed = position * POSITION_FIXED_SCALE;
-				const float error_rate = encoder_get_error_rate();
-				const int is_error = (error_rate > ENCODER_ERROR_THRESHOLD);
-				const int16_t error_bit = is_error << ENCODER_ERROR_BIT_POS;
+			const float position = mc_interface_get_pid_pos_now();
+			const int16_t position_fixed = position * POSITION_FIXED_SCALE;
+			const float error_rate = encoder_get_error_rate();
+			const int is_error = (error_rate > ENCODER_ERROR_THRESHOLD);
+			const int16_t error_bit = is_error << ENCODER_ERROR_BIT_POS;
 
-				can_send_encoder(
-					conf->controller_id, error_bit | position_fixed);
+			can_send_encoder(
+				conf->controller_id, error_bit | position_fixed);
 		}
 
 		chThdSleepMilliseconds(1);
