@@ -473,8 +473,13 @@ void encoder_check_faults(volatile mc_configuration *m_conf, bool is_second_moto
 	bool is_foc_encoder = m_conf->motor_type == MOTOR_TYPE_FOC &&
 			m_conf->foc_sensor_mode == FOC_SENSOR_MODE_ENCODER &&
 			mcpwm_foc_is_using_encoder();
+	// Generate a fault when we're using positon control
+	bool is_foc_pos = m_conf->motor_type == MOTOR_TYPE_FOC &&
+			(m_conf->foc_sensor_mode == FOC_SENSOR_MODE_ENCODER ||
+			m_conf->foc_sensor_mode == FOC_SENSOR_MODE_HALL) &&
+			mcpwm_foc_control_mode() == CONTROL_MODE_POS;
 
-	if (is_foc_encoder) {
+	if (is_foc_encoder || is_foc_pos) {
 		switch (m_conf->m_sensor_port_mode) {
 		case SENSOR_PORT_MODE_HALL:
 		case SENSOR_PORT_MODE_AS5047_SPI:
