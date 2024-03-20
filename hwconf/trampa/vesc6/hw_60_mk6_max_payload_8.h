@@ -47,6 +47,11 @@
 #define MCCONF_FOC_OFFSETS_VOLTAGE_2	0.0066
 #endif
 
+// Position PID
+#ifndef MCCONF_P_PID_OFFSET
+#define MCCONF_P_PID_OFFSET				302.168
+#endif
+
 #include "hw_60_mk6_max_payload.h"
 
 #endif /* HW_60_MK6_MAX_PAYLOAD_8_H_ */
