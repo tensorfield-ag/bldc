@@ -361,10 +361,8 @@ void foc_run_pid_control_pos(bool index_found, float dt, motor_all_state_t *moto
 	float error = utils_angle_difference(angle_set, angle_now);
 	float error_sign = 1.0;
 
-	if (conf_now->m_sensor_port_mode != SENSOR_PORT_MODE_HALL) {
-		if (conf_now->foc_encoder_inverted) {
-			error_sign = -1.0;
-		}
+	if (conf_now->foc_encoder_inverted) {
+		error_sign = -1.0;
 	}
 
 	error *= error_sign;
@@ -432,15 +430,11 @@ void foc_run_pid_control_pos(bool index_found, float dt, motor_all_state_t *moto
 	float output = p_term + motor->m_pos_i_term + d_term + d_term_proc;
 	utils_truncate_number(&output, -1.0, 1.0);
 
-	if (conf_now->m_sensor_port_mode != SENSOR_PORT_MODE_HALL) {
-		if (index_found) {
-			motor->m_iq_set = output * conf_now->l_current_max * conf_now->l_current_max_scale;;
-		} else {
-			// Rotate the motor with 40 % power until the encoder index is found.
-			motor->m_iq_set = 0.4 * conf_now->l_current_max * conf_now->l_current_max_scale;;
-		}
-	} else {
+	if (index_found) {
 		motor->m_iq_set = output * conf_now->l_current_max * conf_now->l_current_max_scale;;
+	} else {
+		// Rotate the motor with 40 % power until the encoder index is found.
+		motor->m_iq_set = 0.4 * conf_now->l_current_max * conf_now->l_current_max_scale;;
 	}
 }
 
