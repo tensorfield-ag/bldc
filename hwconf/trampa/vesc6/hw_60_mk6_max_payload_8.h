@@ -49,7 +49,7 @@
 
 // Position PID
 #ifndef MCCONF_P_PID_OFFSET
-#define MCCONF_P_PID_OFFSET				302.168
+#define MCCONF_P_PID_OFFSET				191.909
 #endif
 
 #include "hw_60_mk6_max_payload.h"
