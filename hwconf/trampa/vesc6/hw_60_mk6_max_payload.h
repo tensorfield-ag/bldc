@@ -9,6 +9,11 @@
 #define MCCONF_L_IN_CURRENT_MIN			-12.0 // Input current limit in Amperes (Lower)
 #endif
 
+// FOC
+#ifndef MCCONF_FOC_ENCODER_INVERTED
+#define MCCONF_FOC_ENCODER_INVERTED		true
+#endif
+
 #include "hw_60_mk6_max_jetty.h"
 
 #endif /* HW_60_MK6_MAX_PAYLOAD_H_ */
