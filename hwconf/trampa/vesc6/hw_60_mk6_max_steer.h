@@ -20,6 +20,11 @@
 #define MCCONF_P_PID_KP					0.05	// Proportional gain
 #endif
 
+// Jetty CAN rate
+#ifndef APPCONF_JETTY_CAN_RATE
+#define APPCONF_JETTY_CAN_RATE			100
+#endif
+
 #include "hw_60_mk6_max_jetty.h"
 
 #endif /* HW_60_MK6_MAX_STEER_H_ */
