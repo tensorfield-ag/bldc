@@ -612,4 +612,9 @@
 #define APPCONF_IMU_G_OFFSET_2				0.0
 #endif
 
+// Jetty
+#ifndef APPCONF_JETTY_CAN_RATE
+#define APPCONF_JETTY_CAN_RATE				1000
+#endif
+
 #endif /* APPCONF_DEFAULT_H_ */

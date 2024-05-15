@@ -71,11 +71,15 @@ static THD_FUNCTION(can_send_encoder_thread, arg) {
 
 	is_running = true;
 
+	const systime_t message_ticks = MS2ST(1000 / APPCONF_JETTY_CAN_RATE);
+
 	for(;;) {
 		if (stop_now) {
 			is_running = false;
 			return;
 		}
+
+		const systime_t start_ticks = chVTGetSystemTime();
 
 		const app_configuration *conf = app_get_configuration();
 
@@ -86,10 +90,14 @@ static THD_FUNCTION(can_send_encoder_thread, arg) {
 			const int is_error = (error_rate > ENCODER_ERROR_THRESHOLD);
 			const int16_t error_bit = is_error << ENCODER_ERROR_BIT_POS;
 
-			can_send_encoder(
-				conf->controller_id, error_bit | position_fixed);
+			can_send_encoder(conf->controller_id, error_bit | position_fixed);
 		}
 
-		chThdSleepMilliseconds(1);
+		// Enforce message rate with sleep
+		const systime_t elapsed_ticks = chVTTimeElapsedSinceX(start_ticks);
+		if (elapsed_ticks < message_ticks) {
+			const systime_t sleep_time = message_ticks - elapsed_ticks;
+			chThdSleep(sleep_time);
+		}
 	}
 }
